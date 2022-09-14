@@ -6,7 +6,7 @@ enable-adaccount -identity "    "
 search-adaccount -lockedout
 
 #unlock specific user account
-unlock-adaccount -identity "    "
+unlock-adaccount -identity "logan"
 
 #unlock all ADusers (confirmation first)
 search-adaccount -lockedout | unlock-adaccount -confirm
@@ -17,3 +17,14 @@ search-adaccount -accountexpired
 #enumerate user accounts expired more than 30 days ago
 search-adaccount -accountexpired | Where-Object {$_.accountexpirationdate -ge ((get-date).adddays(-30))}
 
+#move a user to a OU in the same domain
+get-aduser -filter {samaccountname -eq 'logan'} | move-adobject -targetpath "ou=marketing,dc=adatum.com,dc=com"
+
+#create an OU
+new-adorganizationalunit "Disabled Users"
+
+#identify disabled users
+search-adaccount -accountdisabled -usersonly
+
+#move disabled users into a specific OU "disabled users"
+search-adaccount -accountdisabled -usersonly | move-adobject -targetpath "ou=disabled users,dc=adatum,dc=com"
