@@ -1,0 +1,20 @@
+#retrieve all disabled accounts, then enable a disabled account
+search-adaccount -accountdisabled
+enable-adaccount -identity "    "
+
+#retrieve locked accounts
+search-adaccount -lockedout
+
+#unlock specific user account
+unlock-adaccount -identity "    "
+
+#unlock all ADusers (confirmation first)
+search-adaccount -lockedout | unlock-adaccount -confirm
+
+#retrieve expired accounts
+search-adaccount -accountexpired
+
+#enumerate user accounts expired more than 30 days ago
+search-adaccount -accountexpired | Where-Object {$_.accountexpirationdate -ge ((get-date).adddays(-30))}
+
+#create bulk users
